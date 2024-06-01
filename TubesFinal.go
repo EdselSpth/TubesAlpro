@@ -1,10 +1,8 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-const Start int = 10000
+const NMAX int = 100
 
 type Barang struct {
 	nama, kategori               string
@@ -17,192 +15,84 @@ type BarangTransaksi struct {
 	jumlahBarang int
 }
 
-type arrBarang [Start]Barang
-type arrTransaksi [Start]BarangTransaksi
+type arrBarang [NMAX]Barang
+type arrTransaksi [NMAX]BarangTransaksi
 
 func main() {
-	menu()
+	var nBarang, nTransaksi, pilih int
+	var A arrBarang
+	var B arrTransaksi
+	nBarang = 0
+	pilih = 0
+	for pilih != 14 {
+		menu()
+		fmt.Println("Silahkan pilih menu yang ingin di akses (1/2/3/4/5/6/7/8/9/10/11/12)")
+		fmt.Scan(&pilih)
+		switch pilih {
+		case 1:
+			inputBarang(&A, &nBarang)
+		case 2:
+			editBarang(&A, nBarang)
+		case 3:
+			hapusBarang(&A, &nBarang)
+		case 4:
+			modalBarang(A, nBarang)
+		case 5:
+			defaultShow(A, nBarang)
+		case 6:
+			showByID(&A, nBarang)
+		case 7:
+			showByPrice(&A, nBarang)
+		case 8:
+			searchByID(A, nBarang)
+		case 9:
+			inputTransaksi(&A, nBarang, &B, &nTransaksi)
+		case 10:
+			editTransaksi(&A, nBarang, &B, nTransaksi)
+		case 11:
+			deleteTransaksi(&A, nBarang, &B, &nTransaksi)
+		case 12:
+			income(A, nBarang, B, nTransaksi)
+		case 13:
+			top5(&B, nTransaksi)
+		case 14:
+			fmt.Println("Terima Kasih Telah Menggunakan Aplikasi Ini")
+		}
+	}
 }
 
 func menu() {
-	var pilihan int
-	var n, k int = 0, 0
-	var data arrBarang
-	var data2 arrTransaksi
-	fmt.Println("Aplikasi Jual Beli Barang")
-	fmt.Println("Silahkan Pilh Opsi yang Ingin di Akses")
-	fmt.Println("(1) Akses Database Barang")
-	fmt.Println("(2) Akses Database Transaksi")
-	fmt.Scan(&pilihan)
-	switch pilihan {
-	case 1:
-		menuDatabaseBarang(&data, &n)
-	case 2:
-		menuDatabaseTransaksi(&data, &data2, &n, &k)
-	default:
-		fmt.Println("Pilihan tidak tersedia")
-		menu()
-	}
+	fmt.Println("-----------------------------")
+	fmt.Println("<<Aplikasi Jual Beli Barang>>")
+	fmt.Println("-----------------------------")
+	fmt.Println("<<Menu Database Barang>>")
+	fmt.Println("(1)  Tambah Data Barang")
+	fmt.Println("(2)  Edit Data Barang")
+	fmt.Println("(3)  Hapus Data Barang")
+	fmt.Println("(4)  Total Modal Barang")
+	fmt.Println("(5)  Menampilkan Data Barang Seperti Input")
+	fmt.Println("(6)  Menampilkan Data Barang Terurut berdasarkan ID Barang")
+	fmt.Println("(7)  Menampilkan Data Barang Terurut berdasarkan Harga Barang termahal ke termurah")
+	fmt.Println("(8)  Cari barang Berdasarkan ID Barang")
+	fmt.Println("-----------------------------")
+	fmt.Println("<<Menu Database Transaksi>>")
+	fmt.Println("(9)  Tambah Data Transaksi")
+	fmt.Println("(10) Edit Data Transaksi")
+	fmt.Println("(11) Hapus Data Transaksi")
+	fmt.Println("(12) Total Pendapatan Transaksi")
+	fmt.Println("(13) Menampilkan 5 Barang Terbanyak Terjual")
+	fmt.Println("(14) Keluar Aplikasi")
 }
 
-func menuDatabaseBarang(data *arrBarang, n *int) {
-	var pilihan int
-	fmt.Println("Menu Database Barang")
-	fmt.Println("Silahkan Pilh Opsi yang Ingin di Akses")
-	fmt.Println("(1) Tambah Data Barang")
-	fmt.Println("(2) Edit Data Barang")
-	fmt.Println("(3) Hapus Data Barang")
-	fmt.Println("(4) Total Modal Barang")
-	fmt.Println("(5) Menampilkan Data Barang")
-	fmt.Println("(6) Cari barang")
-	fmt.Println("(7) Kembali Ke Menu Awal")
-	fmt.Scan(&pilihan)
-	switch pilihan {
-	case 1:
-		tambahDataBarang(data, n)
-	case 2:
-		editDataBarang(data, *n)
-	case 3:
-		hapusDataBarang(data, *n)
-	case 4:
-		fmt.Println("Modal seluruh barang :")
-		totalModalBarang(*data, *n)
-	case 5:
-		menutampilDataBarang(data, *n)
-	case 6:
-		menucaribarang(*data, *n)
-	}
-}
-
-func menutampilDataBarang(A *arrBarang, n int) {
-	var pilihan int
-	fmt.Println("Tampilkan Data terurut berdasarkan:")
-	fmt.Println("(1) ID Barang")
-	fmt.Println("(2) Harga Tertinggi ke rendah")
-	fmt.Println("(3) Harga Terendah ke tertinggi")
-	fmt.Scan(&pilihan)
-	switch pilihan {
-	case 1:
-		fmt.Println("ID Barang")
-		selsortID(A, n)
-		fmt.Printf("%40s %40s %40s %40s %40s %40s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
-		for i := 0; i < n; i++ {
-			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
-		}
-		menu()
-	case 2:
-		fmt.Println("Harga Tertinggi ke rendah")
-		insortHNaik(A, n)
-		fmt.Printf("%40s %40s %40s %40s %40s %40s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
-		for i := 0; i < n; i++ {
-			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
-		}
-		menu()
-	case 3:
-		fmt.Println("Harga Terendah ke tertinggi")
-		insortHTurun(A, n)
-		fmt.Printf("%40s %40s %40s %40s %40s %40s", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
-		for i := 0; i < n; i++ {
-			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
-		}
-		fmt.Println("Kembali Kemenu awal?")
-		fmt.Scanln(&pilihan)
-		if pilihan == 1 {
-			menu()
-		} else {
-			menu()
-		}
-	}
-}
-
-func menuDatabaseTransaksi(data *arrBarang, data2 *arrTransaksi, n, k *int) {
-	var pilihan int
-	fmt.Println("Menu Database Transaksi")
-	fmt.Println("Silahkan Pilh Opsi yang Ingin di Akses")
-	fmt.Println("(1) Tambah Data Transaksi")
-	fmt.Println("(2) Edit Data Transaksi")
-	fmt.Println("(3) Hapus Data Transaksi")
-	fmt.Println("(4) Total Pendapatan Transaksi")
-	fmt.Println("(5) Menampilkan 5 Barang Terbanyak Terjual")
-	fmt.Println("(6) Kembali Ke Menu Awal")
-	fmt.Scan(&pilihan)
-	switch pilihan {
-	case 1:
-		tambahDataTransaksi(data, data2, *n, k)
-	case 2:
-		editDataTransaksi(data, data2, *n, *k)
-	case 3:
-		hapusDataTransaksi(data, data2, *n, k)
-	case 4:
-		totalPendapatanTransaksi(*data, *data2, *n, *k)
-	case 5:
-		barangTerbanyakTerjual(data2, *k)
-	case 6:
-		menu()
-	}
-}
-
-func menucaribarang(A arrBarang, n int) {
-	var pilihan int
-	fmt.Println("Mau cari berdasarkan:")
-	fmt.Println("(1) ID Barang")
-	fmt.Println("(2) Nama Barang")
-	fmt.Scanln(&pilihan)
-	switch pilihan {
-	case 1:
-		var id, index2 int
-		fmt.Println("Masukkan ID Barang:")
-		fmt.Scanln(&id)
-		index2 = searchIndexbyidBarangA(A, n, id)
-		fmt.Println("Data Barang yang dicari:")
-		fmt.Println("ID Barang:", A[index2].idBarang)
-		fmt.Println("Nama Barang:", A[index2].nama)
-		fmt.Println("Kategori:", A[index2].kategori)
-		fmt.Println("Modal:", A[index2].modal)
-		fmt.Println("Harga:", A[index2].harga)
-		fmt.Println("Total Barang:", A[index2].stok)
-		fmt.Println("Kembali Kemenu awal?")
-		fmt.Scanln(&pilihan)
-		if pilihan == 1 {
-			menu()
-		} else {
-			menu()
-		}
-
-	case 2:
-		var nama string
-		var index int
-		fmt.Println("Masukkan Nama Barang:")
-		fmt.Scanln(&nama)
-		index = searchIndexbynamaA(A, n, nama)
-		fmt.Println("Data Barang yang dicari:")
-		fmt.Println("ID Barang:", A[index].idBarang)
-		fmt.Println("Nama Barang:", A[index].nama)
-		fmt.Println("Kategori:", A[index].kategori)
-		fmt.Println("Modal:", A[index].modal)
-		fmt.Println("Harga:", A[index].harga)
-		fmt.Println("Total Barang:", A[index].stok)
-		fmt.Println("Kembali Kemenu awal?")
-		fmt.Scanln(&pilihan)
-		if pilihan == 1 {
-			menu()
-		} else {
-			menu()
-		}
-	default:
-		fmt.Println("Pilihan tidak tersedia")
-		menucaribarang(A, n)
-	}
-}
-
-func tambahDataBarang(A *arrBarang, n *int) {
+func inputBarang(A *arrBarang, n *int) {
+	//menambahkan data barang
 	var nama string = "A"
-	var i int
-	for i = 0; i < Start && nama != "none" && nama != "None"; i++ {
+	var i int = 0
+	for *n < NMAX && nama != "none" {
 		fmt.Println("Barang", i+1)
 		fmt.Print("Nama: ")
 		fmt.Scan(&nama)
-		if nama != "none" && nama != "None" {
+		if nama != "none" {
 			A[i].nama = nama
 			fmt.Print("ID Barang: ")
 			fmt.Scan(&A[i].idBarang)
@@ -217,70 +107,76 @@ func tambahDataBarang(A *arrBarang, n *int) {
 			*n++
 		}
 	}
-	if nama == "None" || nama == "none" {
-		menuDatabaseBarang(A, n)
-	}
 }
 
-func editDataBarang(A *arrBarang, n int) {
+func editBarang(A *arrBarang, n int) {
+	//melakukan edit data barang
 	var index, Pilihan int
 	var Dicari string
 	fmt.Println("Masukkan Nama Barang yang ingin di edit:")
 	fmt.Scan(&Dicari)
-	index = searchIndexbynamaA(*A, n, Dicari)
-	if index != -1 {
-		fmt.Println("Apa yang ingin di edit?")
-		fmt.Println("(1) ID Barang")
-		fmt.Println("(2) Nama")
-		fmt.Println("(3) Kategori")
-		fmt.Println("(4) Modal")
-		fmt.Println("(5) Harga")
-		fmt.Println("(6) Banyak Barang")
-		fmt.Println("(7) Kembali ke Menu Awal")
-		fmt.Scan(&Pilihan)
-		switch Pilihan {
-		case 1:
-			fmt.Println("Masukkan ID Barang:")
-			fmt.Scan(&A[index].idBarang)
-			menu()
-		case 2:
-			fmt.Println("Masukkan nama Barang:")
-			fmt.Scan(&A[index].nama)
-			menu()
-		case 3:
-			fmt.Println("Masukkan Kategori:")
-			fmt.Scan(&A[index].kategori)
-			menu()
-		case 4:
-			fmt.Println("Masukkan Modal:")
-			fmt.Scan(&A[index].modal)
-			menu()
-		case 5:
-			fmt.Println("Masukkan Harga:")
-			fmt.Scan(&A[index].harga)
-			menu()
-		case 6:
-			fmt.Println("Masukkan Banyak Barang:")
-			fmt.Scan(&A[index].stok)
-			menu()
-		}
-	} else {
+	index = seqSearchNamaA(*A, n, Dicari)
+	if index == -1 {
 		fmt.Println("Barang yang dicari tidak ada")
 	}
-}
-
-func hapusDataBarang(A *arrBarang, n int) {
-	var i, indexbaru int
-	var dicari int
-	fmt.Println("Masukkan ID Barang yang ingin dihapus data barangnya:")
-	fmt.Scanln(&dicari)
-	indexbaru = searchIndexbyidBarangA(*A, n, dicari)
-	for i = indexbaru; i < n; i++ {
-		A[i] = A[i+1]
+	fmt.Println("(1) ID Barang")
+	fmt.Println("(2) Nama")
+	fmt.Println("(3) Kategori")
+	fmt.Println("(4) Modal")
+	fmt.Println("(5) Harga")
+	fmt.Println("(6) Banyak Barang")
+	fmt.Println("Pilih data yang ingin di ubah (1/2/3/4/5/6)")
+	fmt.Scan(&Pilihan)
+	switch Pilihan {
+	case 1:
+		fmt.Println("Masukkan ID Barang:")
+		fmt.Scan(&A[index].idBarang)
+	case 2:
+		fmt.Println("Masukkan nama Barang:")
+		fmt.Scan(&A[index].nama)
+	case 3:
+		fmt.Println("Masukkan Kategori:")
+		fmt.Scan(&A[index].kategori)
+	case 4:
+		fmt.Println("Masukkan Modal:")
+		fmt.Scan(&A[index].modal)
+	case 5:
+		fmt.Println("Masukkan Harga:")
+		fmt.Scan(&A[index].harga)
+	case 6:
+		fmt.Println("Masukkan Banyak Barang:")
+		fmt.Scan(&A[index].stok)
 	}
 }
 
-func totalModalBarang(A arrBarang, n int) int {
+func seqSearchNamaA(A arrBarang, n int, x string) int {
+	//Mencari index berdasarkan nama barang
+	var i, index int
+	i = -1
+	for i = 0; i < n; i++ {
+		if x == A[i].nama {
+			index = i
+		}
+	}
+	return index
+}
+
+func hapusBarang(A *arrBarang, n *int) {
+	var i, index int
+	var dicari string
+	fmt.Println("Masukkan Nama Barang yang ingin dihapus:")
+	fmt.Scanln(&dicari)
+	index = seqSearchNamaA(*A, *n, dicari)
+	if index == -1 {
+		fmt.Println("Barang yang ingin dihapus tidak ditemukan")
+	}
+	for i = index; i < *n; i++ {
+		A[i] = A[i+1]
+	}
+	*n--
+}
+
+func modalBarang(A arrBarang, n int) int {
 	var i, total int
 	total = 0
 	for i = 0; i < n; i++ {
@@ -289,7 +185,92 @@ func totalModalBarang(A arrBarang, n int) int {
 	return total
 }
 
-func tambahDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
+func defaultShow(A arrBarang, n int) {
+	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+	for i := 0; i < n; i++ {
+		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+	}
+}
+
+func showByID(A *arrBarang, n int) {
+	fmt.Println("ID Barang")
+	selSortID(A, n)
+	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+	for i := 0; i < n; i++ {
+		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+	}
+}
+
+func selSortID(A *arrBarang, n int) {
+	var minIdx, i, j int
+	for i = 0; i < n-1; i++ {
+		minIdx = i
+		for j = i + 1; j < n; j++ {
+			if A[j].idBarang < A[minIdx].idBarang {
+				minIdx = j
+			}
+		}
+		A[i], A[minIdx] = A[minIdx], A[i]
+	}
+}
+
+func showByPrice(A *arrBarang, n int) {
+	var i int
+	inSortPrice(*A, n)
+	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+	for i = 0; i < n; i++ {
+		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+	}
+	menu()
+}
+
+func inSortPrice(A arrBarang, n int) {
+	var i, j int
+	var temp Barang
+	for i = 1; i < n; i++ {
+		temp = A[i]
+		j = i - 1
+		for j >= 0 && A[j].harga > temp.harga {
+			A[j+1] = A[j]
+			j = j - 1
+		}
+		A[j+1] = temp
+	}
+}
+
+func searchByID(A arrBarang, n int) {
+	var i, j, minIdx, idx, kiri, kanan, tengah, index int
+	for i = 0; i < n-1; i++ {
+		minIdx = i
+		for j = i + 1; j < n; j++ {
+			if A[j].idBarang < A[minIdx].idBarang {
+				minIdx = j
+			}
+		}
+		A[i], A[minIdx] = A[minIdx], A[i]
+	}
+	fmt.Println("Masukkan ID Barang yang ingin dicari")
+	fmt.Scan(&idx)
+	kiri, kanan = 0, n-1
+	for i = 0; i < n; i++ {
+		tengah = (kiri + kanan) / 2
+		if A[tengah].idBarang < idx {
+			kiri = tengah + 1
+		} else if A[tengah].idBarang > idx {
+			kanan = tengah - 1
+		} else {
+			index = tengah
+		}
+	}
+	fmt.Println("Berikut data barang yang anda cari")
+	fmt.Println("Nama Barang: ", A[index].nama)
+	fmt.Println("Kategori: ", A[index].kategori)
+	fmt.Println("Modal: ", A[index].modal)
+	fmt.Println("Harga: ", A[index].harga)
+	fmt.Println("Stok: ", A[index].stok)
+}
+
+func inputTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
 	var nama string = "A"
 	var nBarang, index, IDBarang, temp int
 	for nama != "none" && nama != "None" {
@@ -299,7 +280,7 @@ func tambahDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
 		fmt.Scan(&nama)
 		fmt.Print("Masukkan Banyak Barang: ")
 		fmt.Scan(&nBarang)
-		index = searchIndexbynamaA(*A, n, nama)
+		index = seqSearchNamaA(*A, n, nama)
 		if index != -1 {
 			temp = A[index].stok
 			if A[index].stok != 0 {
@@ -323,11 +304,11 @@ func tambahDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
 	}
 }
 
-func editDataTransaksi(A *arrBarang, B *arrTransaksi, n, k int) {
+func editTransaksi(A *arrBarang, n int, B *arrTransaksi, k int) {
 	var nama string = "A"
 	var indexB, Pilihan int
 	fmt.Println("Masukkan nama barang yang ingin di edit")
-	indexB = searchIndexbynamaB(B, k, nama)
+	indexB = seqSearchNamaB(*B, k, nama)
 	if indexB != -1 {
 		fmt.Println("Apa yang mau di edit?")
 		fmt.Println("(1) ID Barang")
@@ -345,12 +326,12 @@ func editDataTransaksi(A *arrBarang, B *arrTransaksi, n, k int) {
 			var temp, Qty, indexA int
 			var nama string
 			nama = B[indexB].nama
-			indexA = searchIndexbynamaA(*A, n, nama)
+			indexA = seqSearchNamaA(*A, n, nama)
 			fmt.Print("Masukkan Jumlah Barang: ")
 			temp = B[indexB].jumlahBarang
 			fmt.Scan(&B[indexB].jumlahBarang)
 			nama = B[indexB].nama
-			indexA = searchIndexbynamaA(*A, n, nama)
+			indexA = seqSearchNamaA(*A, n, nama)
 			B[indexB].jumlahBarang = Qty
 			if temp > Qty {
 				A[indexA].stok -= Qty
@@ -363,33 +344,71 @@ func editDataTransaksi(A *arrBarang, B *arrTransaksi, n, k int) {
 	}
 }
 
-func hapusDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
-	var i, indexbaru, dicari, indexB, Qty int
+func seqSearchNamaB(A arrTransaksi, n int, x string) int {
+	//Mencari index berdasarkan nama barang
+	var i, index int
+	i = -1
+	for i = 0; i < n; i++ {
+		if x == A[i].nama {
+			index = i
+		}
+	}
+	return index
+}
+
+func deleteTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
+	var i, indexA, indexB, Qty int
 	var nama string
 	fmt.Println("Masukkan ID Barang yang ingin dihapus data barangnya:")
-	fmt.Scanln(&dicari)
-	indexbaru = searchIndexbyidBarangA(*A, n, dicari)
-	nama = A[indexbaru].nama
-	indexB = searchIndexbynamaB(B, *k, nama)
+	indexA = binSearchID(A, n)
+	nama = A[indexA].nama
+	indexB = seqSearchNamaB(*B, *k, nama)
 	Qty = B[indexB].jumlahBarang
-	A[indexbaru].stok += Qty
-	for i = indexbaru; i < n; i++ {
+	A[indexA].stok += Qty
+	for i = indexB; i < n; i++ {
 		B[i] = B[i+1]
 	}
 }
 
-func totalPendapatanTransaksi(A arrBarang, B arrTransaksi, n, k int) int {
+func binSearchID(A *arrBarang, n int) int {
+	var i, j, minIdx, idx, kiri, kanan, tengah, index int
+	for i = 0; i < n-1; i++ {
+		minIdx = i
+		for j = i + 1; j < n; j++ {
+			if A[j].idBarang < A[minIdx].idBarang {
+				minIdx = j
+			}
+		}
+		A[i], A[minIdx] = A[minIdx], A[i]
+	}
+	fmt.Println("Masukkan ID Barang yang ingin dicari")
+	fmt.Scan(&idx)
+	kiri, kanan = 0, n-1
+	for i = 0; i < n; i++ {
+		tengah = (kiri + kanan) / 2
+		if A[tengah].idBarang < idx {
+			kiri = tengah + 1
+		} else if A[tengah].idBarang > idx {
+			kanan = tengah - 1
+		} else {
+			index = tengah
+		}
+	}
+	return index
+}
+
+func income(A arrBarang, n int, B arrTransaksi, k int) {
 	var total, i, indexA int
 	var nama string
 	for i = 0; i < k; i++ {
 		nama = B[i].nama
-		indexA = searchIndexbynamaA(A, n, nama)
+		indexA = seqSearchNamaA(A, n, nama)
 		total = total + (A[indexA].harga * B[i].jumlahBarang)
 	}
-	return total
+
 }
 
-func barangTerbanyakTerjual(B *arrTransaksi, n int) {
+func top5(B *arrTransaksi, n int) {
 	var i, j int
 	var temp BarangTransaksi
 	for i = 0; i < n; i++ {
@@ -401,106 +420,8 @@ func barangTerbanyakTerjual(B *arrTransaksi, n int) {
 			}
 		}
 	}
-	fmt.Println("Barang yang paling banyak terjual")
+	fmt.Println("5 Barang dengan penjualan terbanyak")
 	for i = 0; i < 5; i++ {
-		fmt.Println(B[i].nama, B[i].jumlahBarang)
+		fmt.Printf("%15s, %15d/n", B[i].nama, B[i].jumlahBarang)
 	}
-}
-
-func searchIndexbynamaA(A arrBarang, n int, x string) int {
-	var i, index int
-	i = -1
-	for i = 0; i < n; i++ {
-		if x == A[i].nama {
-			index = i
-		}
-	}
-	return index
-}
-
-func searchIndexbynamaB(A *arrTransaksi, n int, x string) int {
-	var i, index int
-	i = -1
-	for i = 0; i < n; i++ {
-		if x == A[i].nama {
-			index = i
-		}
-	}
-	return index
-}
-
-func searchIndexbyidBarangA(A arrBarang, n int, x int) int {
-	var kiri, kanan, tengah, index int
-	var i int
-	selsortID(&A, n)
-	for i = 0; i < n; i++ {
-		tengah = (kiri + kanan) / 2
-		if A[tengah].idBarang < x {
-			kiri = tengah + 1
-		} else if A[tengah].idBarang > x {
-			kanan = tengah - 1
-		} else {
-			index = tengah
-		}
-	}
-	return index
-}
-
-func selsortID(A *arrBarang, n int) {
-	var minIdx, i, j int
-	for i = 0; i < n-1; i++ {
-		minIdx = i
-		for j = i + 1; j < n; j++ {
-			if A[j].idBarang < A[minIdx].idBarang {
-				minIdx = j
-			}
-		}
-		A[i], A[minIdx] = A[minIdx], A[i]
-	}
-}
-
-func selsortIDB(A *arrTransaksi, n int) {
-	var minIdx, i, j int
-	for i = 0; i < n-1; i++ {
-		minIdx = i
-		for j = i + 1; j < n; j++ {
-			if A[j].idBarang < A[minIdx].idBarang {
-				minIdx = j
-			}
-		}
-		A[i], A[minIdx] = A[minIdx], A[i]
-	}
-}
-
-func insortHNaik(A *arrBarang, n int) {
-	var i, pass int
-	var temp Barang
-	pass = 1
-	for pass <= n-1 {
-		i = pass
-		temp.harga = A[1].harga
-		for i > 0 && temp.harga < A[i-1].harga {
-			A[i] = A[i-1]
-			i--
-		}
-		A[i] = temp
-		pass = pass + 1
-	}
-}
-
-func insortHTurun(A *arrBarang, n int) {
-	var i, pass int
-	var temp Barang
-	pass = 1
-	for pass <= n-1 {
-		i = pass
-		temp.harga = A[1].harga
-		for i > 0 && temp.harga > A[i-1].harga {
-			A[i] = A[i-1]
-			i--
-		}
-		A[i] = temp
-		pass = pass + 1
-	}
-
 }
