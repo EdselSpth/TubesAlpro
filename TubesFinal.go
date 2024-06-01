@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const Start int = 10000
 
@@ -83,23 +85,32 @@ func menutampilDataBarang(A *arrBarang, n int) {
 	case 1:
 		fmt.Println("ID Barang")
 		selsortID(A, n)
-		fmt.Printf("| %10s | | %10s | | %10s | | %10s | | %10s | | %10s\n |", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+		fmt.Printf("%40s %40s %40s %40s %40s %40s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
 		for i := 0; i < n; i++ {
-			fmt.Printf("| %10d | | %10s | | %10s | | %10d | | %10d | | %10d | \n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
 		}
+		menu()
 	case 2:
 		fmt.Println("Harga Tertinggi ke rendah")
 		insortHNaik(A, n)
-		fmt.Printf("| %10s | | %10s | | %10s | | %10s | | %10s | | %10s\n |", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+		fmt.Printf("%40s %40s %40s %40s %40s %40s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
 		for i := 0; i < n; i++ {
-			fmt.Printf("| %10d | | %10s | | %10s | | %10d | | %10d | | %10d | \n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
 		}
+		menu()
 	case 3:
 		fmt.Println("Harga Terendah ke tertinggi")
 		insortHTurun(A, n)
-		fmt.Printf("| %10s | | %10s | | %10s | | %10s | | %10s | | %10s\n |", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+		fmt.Printf("%40s %40s %40s %40s %40s %40s", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
 		for i := 0; i < n; i++ {
-			fmt.Printf("| %10d | | %10s | | %10s | | %10d | | %10d | | %10d | \n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+			fmt.Printf("%40d %40s %40s %40d %40d %40d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+		}
+		fmt.Println("Kembali Kemenu awal?")
+		fmt.Scanln(&pilihan)
+		if pilihan == 1 {
+			menu()
+		} else {
+			menu()
 		}
 	}
 }
@@ -150,6 +161,14 @@ func menucaribarang(A arrBarang, n int) {
 		fmt.Println("Modal:", A[index2].modal)
 		fmt.Println("Harga:", A[index2].harga)
 		fmt.Println("Total Barang:", A[index2].stok)
+		fmt.Println("Kembali Kemenu awal?")
+		fmt.Scanln(&pilihan)
+		if pilihan == 1 {
+			menu()
+		} else {
+			menu()
+		}
+
 	case 2:
 		var nama string
 		var index int
@@ -163,6 +182,13 @@ func menucaribarang(A arrBarang, n int) {
 		fmt.Println("Modal:", A[index].modal)
 		fmt.Println("Harga:", A[index].harga)
 		fmt.Println("Total Barang:", A[index].stok)
+		fmt.Println("Kembali Kemenu awal?")
+		fmt.Scanln(&pilihan)
+		if pilihan == 1 {
+			menu()
+		} else {
+			menu()
+		}
 	default:
 		fmt.Println("Pilihan tidak tersedia")
 		menucaribarang(A, n)
@@ -170,23 +196,26 @@ func menucaribarang(A arrBarang, n int) {
 }
 
 func tambahDataBarang(A *arrBarang, n *int) {
-	var nama string
+	var nama string = "A"
 	var i int
-	for i = 0; i < Start && (nama != "None" || nama != "none"); i++ {
-		fmt.Println("ID Barang: ")
-		fmt.Scan(&A[i].idBarang)
-		fmt.Println("Nama: ")
-		fmt.Scan(&A[i].nama)
-		fmt.Println("Kategori: ")
-		fmt.Scan(&A[i].kategori)
-		fmt.Println("Modal: ")
-		fmt.Scan(&A[i].modal)
-		fmt.Println("Harga: ")
-		fmt.Scan(&A[i].harga)
-		fmt.Println("Total Barang: ")
-		fmt.Scan(&A[i].stok)
-		nama = A[i].nama
-		*n++
+	for i = 0; i < Start && nama != "none" && nama != "None"; i++ {
+		fmt.Println("Barang", i+1)
+		fmt.Print("Nama: ")
+		fmt.Scan(&nama)
+		if nama != "none" && nama != "None" {
+			A[i].nama = nama
+			fmt.Print("ID Barang: ")
+			fmt.Scan(&A[i].idBarang)
+			fmt.Print("Kategori: ")
+			fmt.Scan(&A[i].kategori)
+			fmt.Print("Modal: ")
+			fmt.Scan(&A[i].modal)
+			fmt.Print("Harga: ")
+			fmt.Scan(&A[i].harga)
+			fmt.Print("Total Barang: ")
+			fmt.Scan(&A[i].stok)
+			*n++
+		}
 	}
 	if nama == "None" || nama == "none" {
 		menuDatabaseBarang(A, n)
@@ -213,21 +242,27 @@ func editDataBarang(A *arrBarang, n int) {
 		case 1:
 			fmt.Println("Masukkan ID Barang:")
 			fmt.Scan(&A[index].idBarang)
+			menu()
 		case 2:
 			fmt.Println("Masukkan nama Barang:")
 			fmt.Scan(&A[index].nama)
+			menu()
 		case 3:
 			fmt.Println("Masukkan Kategori:")
 			fmt.Scan(&A[index].kategori)
+			menu()
 		case 4:
 			fmt.Println("Masukkan Modal:")
 			fmt.Scan(&A[index].modal)
+			menu()
 		case 5:
 			fmt.Println("Masukkan Harga:")
 			fmt.Scan(&A[index].harga)
+			menu()
 		case 6:
 			fmt.Println("Masukkan Banyak Barang:")
 			fmt.Scan(&A[index].stok)
+			menu()
 		}
 	} else {
 		fmt.Println("Barang yang dicari tidak ada")
@@ -257,13 +292,13 @@ func totalModalBarang(A arrBarang, n int) int {
 func tambahDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
 	var nama string = "A"
 	var nBarang, index, IDBarang, temp int
-	for nama != "none" || nama != "None" {
-		fmt.Println("Masukkan ID Barang:")
-		fmt.Scanln(&IDBarang)
-		fmt.Println("Masukkan Nama Barang:")
-		fmt.Scanln(&nama)
-		fmt.Println("Masukkan Banyak Barang:")
-		fmt.Scanln(&nBarang)
+	for nama != "none" && nama != "None" {
+		fmt.Print("Masukkan ID Barang: ")
+		fmt.Scan(&IDBarang)
+		fmt.Print("Masukkan Nama Barang: ")
+		fmt.Scan(&nama)
+		fmt.Print("Masukkan Banyak Barang: ")
+		fmt.Scan(&nBarang)
 		index = searchIndexbynamaA(*A, n, nama)
 		if index != -1 {
 			temp = A[index].stok
@@ -277,6 +312,7 @@ func tambahDataTransaksi(A *arrBarang, B *arrTransaksi, n int, k *int) {
 				} else {
 					A[index].stok = temp
 					fmt.Println("Stok Barang Tidak mencukupi, silahkan input ulang")
+
 				}
 			} else {
 				fmt.Println("Stok Barang Habis, silahkan input ulang")
@@ -300,19 +336,19 @@ func editDataTransaksi(A *arrBarang, B *arrTransaksi, n, k int) {
 		fmt.Scanln(&Pilihan)
 		switch Pilihan {
 		case 1:
-			fmt.Println("Masukkan IDBarang:")
-			fmt.Scanln(&B[indexB].idBarang)
+			fmt.Print("Masukkan IDBarang: ")
+			fmt.Scan(&B[indexB].idBarang)
 		case 2:
-			fmt.Println("Masukkan Nama Barang:")
-			fmt.Scanln(&B[indexB].nama)
+			fmt.Print("Masukkan Nama Barang: ")
+			fmt.Scan(&B[indexB].nama)
 		case 3:
 			var temp, Qty, indexA int
 			var nama string
 			nama = B[indexB].nama
 			indexA = searchIndexbynamaA(*A, n, nama)
-			fmt.Println("Masukkan Jumlah Barang:")
+			fmt.Print("Masukkan Jumlah Barang: ")
 			temp = B[indexB].jumlahBarang
-			fmt.Scanln(&B[indexB].jumlahBarang)
+			fmt.Scan(&B[indexB].jumlahBarang)
 			nama = B[indexB].nama
 			indexA = searchIndexbynamaA(*A, n, nama)
 			B[indexB].jumlahBarang = Qty
