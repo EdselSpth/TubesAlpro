@@ -88,22 +88,22 @@ func inputBarang(A *arrBarang, n *int) {
 	//menambahkan data barang
 	var nama string = "A"
 	var i int = 0
-	for *n < NMAX && nama != "none" {
+	for *n < NMAX && nama != "none" && nama != "None" && nama != "NONE" {
 		fmt.Println("Barang", i+1)
 		fmt.Print("Nama: ")
 		fmt.Scan(&nama)
-		if nama != "none" {
-			A[i].nama = nama
+		if nama != "none" && nama != "None" && nama != "NONE" {
+			A[*n].nama = nama
 			fmt.Print("ID Barang: ")
-			fmt.Scan(&A[i].idBarang)
+			fmt.Scan(&A[*n].idBarang)
 			fmt.Print("Kategori: ")
-			fmt.Scan(&A[i].kategori)
+			fmt.Scan(&A[*n].kategori)
 			fmt.Print("Modal: ")
-			fmt.Scan(&A[i].modal)
+			fmt.Scan(&A[*n].modal)
 			fmt.Print("Harga: ")
-			fmt.Scan(&A[i].harga)
+			fmt.Scan(&A[*n].harga)
 			fmt.Print("Total Barang: ")
-			fmt.Scan(&A[i].stok)
+			fmt.Scan(&A[*n].stok)
 			*n++
 		}
 	}
@@ -251,6 +251,7 @@ func searchByID(A arrBarang, n int) {
 	}
 	fmt.Println("Masukkan ID Barang yang ingin dicari")
 	fmt.Scan(&idx)
+	index = -1
 	kiri, kanan = 0, n-1
 	for i = 0; i < n; i++ {
 		tengah = (kiri + kanan) / 2
@@ -262,18 +263,22 @@ func searchByID(A arrBarang, n int) {
 			index = tengah
 		}
 	}
-	fmt.Println("Berikut data barang yang anda cari")
-	fmt.Println("Nama Barang: ", A[index].nama)
-	fmt.Println("Kategori: ", A[index].kategori)
-	fmt.Println("Modal: ", A[index].modal)
-	fmt.Println("Harga: ", A[index].harga)
-	fmt.Println("Stok: ", A[index].stok)
+	if index == -1 {
+		fmt.Println("Data tidak ditemukan")
+	} else {
+		fmt.Println("Berikut data barang yang anda cari")
+		fmt.Println("Nama Barang: ", A[index].nama)
+		fmt.Println("Kategori: ", A[index].kategori)
+		fmt.Println("Modal: ", A[index].modal)
+		fmt.Println("Harga: ", A[index].harga)
+		fmt.Println("Stok: ", A[index].stok)
+	}
 }
 
 func inputTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
 	var nama string = "A"
 	var nBarang, index, IDBarang, temp int
-	for nama != "none" && nama != "None" {
+	for nama != "none" && nama != "None" && nama != "NONE" {
 		fmt.Print("Masukkan ID Barang: ")
 		fmt.Scan(&IDBarang)
 		fmt.Print("Masukkan Nama Barang: ")
