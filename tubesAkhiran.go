@@ -19,6 +19,7 @@ type arrBarang [NMAX]Barang
 type arrTransaksi [NMAX]BarangTransaksi
 
 func main() {
+	//program utama
 	var nBarang, nTransaksi, pilih int
 	var A arrBarang
 	var B arrTransaksi
@@ -62,6 +63,7 @@ func main() {
 }
 
 func menu() {
+	//function memanggil menu
 	fmt.Println("-----------------------------")
 	fmt.Println("<<Aplikasi Jual Beli Barang>>")
 	fmt.Println("-----------------------------")
@@ -162,6 +164,7 @@ func seqSearchNamaA(A arrBarang, n int, x string) int {
 }
 
 func hapusBarang(A *arrBarang, n *int) {
+	// melakukan delete data barang
 	var dicari string
 	fmt.Print("Silahkan masukkan nama yang ingin dihapus: ")
 	fmt.Scan(&dicari)
@@ -176,6 +179,7 @@ func hapusBarang(A *arrBarang, n *int) {
 }
 
 func modalBarang(A arrBarang, n int) int {
+	// menghitung modal barang
 	var i, total int
 	total = 0
 	for i = 0; i < n; i++ {
@@ -185,6 +189,7 @@ func modalBarang(A arrBarang, n int) int {
 }
 
 func defaultShow(A arrBarang, n int) {
+	//menampilkan data barang default
 	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
 	for i := 0; i < n; i++ {
 		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
@@ -192,6 +197,7 @@ func defaultShow(A arrBarang, n int) {
 }
 
 func showByID(A *arrBarang, n int) {
+	//menampilkan data barang berdasarkan id barang
 	fmt.Println("ID Barang")
 	selSortID(A, n)
 	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
@@ -201,6 +207,7 @@ func showByID(A *arrBarang, n int) {
 }
 
 func selSortID(A *arrBarang, n int) {
+	//selection sort
 	var minIdx, i, j int
 	for i = 0; i < n-1; i++ {
 		minIdx = i
@@ -214,6 +221,7 @@ func selSortID(A *arrBarang, n int) {
 }
 
 func showByPrice(A *arrBarang, n int) {
+	//menampilkan data barang berdasarkan harga
 	var i int
 	var j int
 	var temp Barang
@@ -234,7 +242,9 @@ func showByPrice(A *arrBarang, n int) {
 }
 
 func searchByID(A arrBarang, n int) {
+	//pencarian berdasarkan ID barang
 	var i, j, minIdx, idx, kiri, kanan, tengah, index int
+	//Selection sort
 	for i = 0; i < n-1; i++ {
 		minIdx = i
 		for j = i + 1; j < n; j++ {
@@ -246,6 +256,7 @@ func searchByID(A arrBarang, n int) {
 	}
 	fmt.Println("Masukkan ID Barang yang ingin dicari")
 	fmt.Scan(&idx)
+	// binary search
 	index = -1
 	kiri, kanan = 0, n-1
 	for i = 0; i < n; i++ {
@@ -271,13 +282,14 @@ func searchByID(A arrBarang, n int) {
 }
 
 func inputTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
+	// melakukan input data transaksi
 	var nama string = "A"
 	var nBarang, index, IDBarang, temp int
 	for nama != "none" && nama != "None" && nama != "NONE" {
 		fmt.Print("Masukkan Nama Barang: ")
 		fmt.Scan(&nama)
 		if nama != "none" && nama != "NONE" && nama != "None" {
-			fmt.Print("Masukkan ID Barang: ")
+			fmt.Print("Masukkan ID Transaksi: ")
 			fmt.Scan(&IDBarang)
 			fmt.Print("Masukkan Banyak Barang: ")
 			fmt.Scan(&nBarang)
@@ -307,6 +319,7 @@ func inputTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
 }
 
 func editTransaksi(A *arrBarang, n int, B *arrTransaksi, k int) {
+	// melakukan edit data transaksi
 	var nama string = "A"
 	var indexB, Pilihan int
 	fmt.Println("Masukkan nama barang yang ingin di edit")
@@ -320,6 +333,7 @@ func editTransaksi(A *arrBarang, n int, B *arrTransaksi, k int) {
 	fmt.Println("(3) Jumlah Barang")
 	fmt.Println("Silahkan pilih data yang ingin di edit (1/2/3/4)")
 	fmt.Scan(&Pilihan)
+	//switch case
 	switch Pilihan {
 	case 1:
 		fmt.Print("Masukkan IDBarang: ")
@@ -360,20 +374,25 @@ func seqSearchNamaB(A arrTransaksi, n int, x string) int {
 }
 
 func deleteTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
-	var i, indexA, indexB, Qty int
+	//Menghapus data transaksi berdasarkan ID barang
+	var i, indexA, indexB int
 	var nama string
-	fmt.Println("Masukkan ID Barang yang ingin dihapus data barangnya:")
-	indexA = binSearchID(A, n)
-	nama = A[indexA].nama
-	indexB = seqSearchNamaB(*B, *k, nama)
-	Qty = B[indexB].jumlahBarang
-	A[indexA].stok += Qty
+	fmt.Println("Masukkan ID Barang yang ingin dihapus data transaksi:")
+	indexB = binSearchID(B, *k)
+	if indexB == -1 {
+		fmt.Println("Data tidak ditemukan")
+	}
+	nama = B[indexB].nama
+	indexB = seqSearchNamaA(*A, n, nama)
+	A[indexA].stok += B[indexB].jumlahBarang
 	for i = indexB; i < n; i++ {
 		B[i] = B[i+1]
+		*k--
 	}
 }
 
-func binSearchID(A *arrBarang, n int) int {
+func binSearchID(A *arrTransaksi, n int) int {
+	//Mencari index berdasarkan ID barang
 	var i, j, minIdx, idx, kiri, kanan, tengah, index int
 	for i = 0; i < n-1; i++ {
 		minIdx = i
@@ -385,6 +404,8 @@ func binSearchID(A *arrBarang, n int) int {
 		A[i], A[minIdx] = A[minIdx], A[i]
 	}
 	fmt.Scan(&idx)
+	//binary search
+	index = -1
 	kiri, kanan = 0, n-1
 	for i = 0; i < n; i++ {
 		tengah = (kiri + kanan) / 2
@@ -400,6 +421,7 @@ func binSearchID(A *arrBarang, n int) int {
 }
 
 func income(A arrBarang, n int, B arrTransaksi, k int) {
+	//Menghitung total pendapatan
 	var total, i, indexA int
 	var nama string
 	for i = 0; i < k; i++ {
@@ -411,8 +433,10 @@ func income(A arrBarang, n int, B arrTransaksi, k int) {
 }
 
 func top5(B *arrTransaksi, n int) {
+	//Mencari 5 barang dengan penjualan terbanyak
 	var i, j int
 	var temp BarangTransaksi
+	//insertion sort
 	for i = 1; i < n; i++ {
 		temp = B[i]
 		j = i - 1
