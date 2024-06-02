@@ -26,7 +26,7 @@ func main() {
 	pilih = 0
 	for pilih != 14 {
 		menu()
-		fmt.Println("Silahkan pilih menu yang ingin di akses (1/2/3/4/5/6/7/8/9/10/11/12)")
+		fmt.Println("Silahkan pilih menu yang ingin di akses (1/2/3/4/5/6/7/8/9/10/11/12/13/14)")
 		fmt.Scan(&pilih)
 		switch pilih {
 		case 1:
@@ -420,7 +420,8 @@ func top5(B *arrTransaksi, n int) {
 		B[j+1] = temp
 	}
 	fmt.Println("5 Barang dengan penjualan terbanyak")
+	fmt.Printf("%15s %15s %15s\n", "ID Barang", "Nama Barang", "Jumlah")
 	for i = 0; i < 5; i++ {
-		fmt.Printf("%15s %15d/n", B[i].nama, B[i].jumlahBarang)
+		fmt.Printf("%15d %15s %15d\n", B[i].idBarang, B[i].nama, B[i].jumlahBarang)
 	}
 }
