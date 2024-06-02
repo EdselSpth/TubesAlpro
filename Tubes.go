@@ -161,15 +161,14 @@ func seqSearchNamaA(A arrBarang, n int, x string) int {
 }
 
 func hapusBarang(A *arrBarang, n *int) {
-	var i, index int
 	var dicari string
-	fmt.Println("Masukkan Nama Barang yang ingin dihapus:")
-	fmt.Scanln(&dicari)
-	index = seqSearchNamaA(*A, *n, dicari)
+	fmt.Print("Silahkan masukkan nama yang ingin dihapus: ")
+	fmt.Scan(&dicari)
+	index := seqSearchNamaA(*A, *n, dicari)
 	if index == -1 {
-		fmt.Println("Barang yang ingin dihapus tidak ditemukan")
+		fmt.Println("Tempat Wisata tidak ditemukan.")
 	}
-	for i = index; i < *n; i++ {
+	for i := index; i < *n-1; i++ {
 		A[i] = A[i+1]
 	}
 	*n--
@@ -221,7 +220,7 @@ func showByPrice(A *arrBarang, n int) {
 	for i = 1; i < n; i++ {
 		temp = A[i]
 		j = i - 1
-		for j >= 0 && A[j].harga > temp.harga {
+		for j >= 0 && A[j].harga < temp.harga {
 			A[j+1] = A[j]
 			j = j - 1
 		}
@@ -231,7 +230,6 @@ func showByPrice(A *arrBarang, n int) {
 	for i = 0; i < n; i++ {
 		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
 	}
-	menu()
 }
 
 func searchByID(A arrBarang, n int) {
@@ -383,7 +381,6 @@ func binSearchID(A *arrBarang, n int) int {
 		}
 		A[i], A[minIdx] = A[minIdx], A[i]
 	}
-	fmt.Println("Masukkan ID Barang yang ingin dicari")
 	fmt.Scan(&idx)
 	kiri, kanan = 0, n-1
 	for i = 0; i < n; i++ {
@@ -407,23 +404,23 @@ func income(A arrBarang, n int, B arrTransaksi, k int) {
 		indexA = seqSearchNamaA(A, n, nama)
 		total = total + (A[indexA].harga * B[i].jumlahBarang)
 	}
-
+	fmt.Println("Total Pendapatan :", total)
 }
 
 func top5(B *arrTransaksi, n int) {
 	var i, j int
 	var temp BarangTransaksi
-	for i = 0; i < n; i++ {
-		for j = i + 1; j < n; j++ {
-			if B[i].jumlahBarang < B[j].jumlahBarang {
-				temp = B[i]
-				B[i] = B[j]
-				B[j] = temp
-			}
+	for i = 1; i < n; i++ {
+		temp = B[i]
+		j = i - 1
+		for j >= 0 && B[j].jumlahBarang < temp.jumlahBarang {
+			B[j+1] = B[j]
+			j = j - 1
 		}
+		B[j+1] = temp
 	}
 	fmt.Println("5 Barang dengan penjualan terbanyak")
 	for i = 0; i < 5; i++ {
-		fmt.Printf("%15s, %15d/n", B[i].nama, B[i].jumlahBarang)
+		fmt.Printf("%15s %15d/n", B[i].nama, B[i].jumlahBarang)
 	}
 }
