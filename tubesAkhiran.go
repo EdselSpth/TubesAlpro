@@ -25,9 +25,9 @@ func main() {
 	var B arrTransaksi
 	nBarang = 0
 	pilih = 0
-	for pilih != 14 {
+	for pilih != 15 {
 		menu()
-		fmt.Println("Silahkan pilih menu yang ingin di akses (1/2/3/4/5/6/7/8/9/10/11/12/13/14)")
+		fmt.Println("Silahkan pilih menu yang ingin di akses (1/2/3/4/5/6/7/8/9/10/11/12/13/14/15)")
 		fmt.Scan(&pilih)
 		switch pilih {
 		case 1:
@@ -43,20 +43,22 @@ func main() {
 		case 6:
 			showByID(&A, nBarang)
 		case 7:
-			showByPrice(&A, nBarang)
+			showByPriceDesc(&A, nBarang)
 		case 8:
-			searchByID(A, nBarang)
+			showByPriceAsc(&A, nBarang)
 		case 9:
-			inputTransaksi(&A, nBarang, &B, &nTransaksi)
+			searchByID(A, nBarang)
 		case 10:
-			editTransaksi(&A, nBarang, &B, nTransaksi)
+			inputTransaksi(&A, nBarang, &B, &nTransaksi)
 		case 11:
-			deleteTransaksi(&A, nBarang, &B, &nTransaksi)
+			editTransaksi(&A, nBarang, &B, nTransaksi)
 		case 12:
-			income(A, nBarang, B, nTransaksi)
+			deleteTransaksi(&A, nBarang, &B, &nTransaksi)
 		case 13:
-			top5(&B, nTransaksi)
+			income(A, nBarang, B, nTransaksi)
 		case 14:
+			top5(&B, nTransaksi)
+		case 15:
 			fmt.Println("Terima Kasih Telah Menggunakan Aplikasi Ini")
 		}
 	}
@@ -75,15 +77,16 @@ func menu() {
 	fmt.Println("(5)  Menampilkan Data Barang Seperti Input")
 	fmt.Println("(6)  Menampilkan Data Barang Terurut berdasarkan ID Barang")
 	fmt.Println("(7)  Menampilkan Data Barang Terurut berdasarkan Harga Barang termahal ke termurah")
-	fmt.Println("(8)  Cari barang Berdasarkan ID Barang")
+	fmt.Println("(8)  Menampilkan Data Barang Terurut berdasarkan Harga Barang termurah ke termahal")
+	fmt.Println("(9)  Cari barang Berdasarkan ID Barang")
 	fmt.Println("-----------------------------")
 	fmt.Println("<<Menu Database Transaksi>>")
-	fmt.Println("(9)  Tambah Data Transaksi")
-	fmt.Println("(10) Edit Data Transaksi")
-	fmt.Println("(11) Hapus Data Transaksi")
-	fmt.Println("(12) Total Pendapatan Transaksi")
-	fmt.Println("(13) Menampilkan 5 Barang Terbanyak Terjual")
-	fmt.Println("(14) Keluar Aplikasi")
+	fmt.Println("(10) Tambah Data Transaksi")
+	fmt.Println("(11) Edit Data Transaksi")
+	fmt.Println("(12) Hapus Data Transaksi")
+	fmt.Println("(13) Total Pendapatan Transaksi")
+	fmt.Println("(14) Menampilkan 5 Barang Terbanyak Terjual")
+	fmt.Println("(15) Keluar Aplikasi")
 }
 
 func inputBarang(A *arrBarang, n *int) {
@@ -220,7 +223,28 @@ func selSortID(A *arrBarang, n int) {
 	}
 }
 
-func showByPrice(A *arrBarang, n int) {
+func showByPriceDesc(A *arrBarang, n int) {
+	//menampilkan data barang berdasarkan harga
+	var i int
+	var j int
+	var temp Barang
+	//insertion sort descending
+	for i = 1; i < n; i++ {
+		temp = A[i]
+		j = i - 1
+		for j >= 0 && A[j].harga < temp.harga {
+			A[j+1] = A[j]
+			j = j - 1
+		}
+		A[j+1] = temp
+	}
+	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+	for i = 0; i < n; i++ {
+		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+	}
+}
+
+func showByPriceAsc(A *arrBarang, n int) {
 	//menampilkan data barang berdasarkan harga
 	var i int
 	var j int
@@ -229,7 +253,7 @@ func showByPrice(A *arrBarang, n int) {
 	for i = 1; i < n; i++ {
 		temp = A[i]
 		j = i - 1
-		for j >= 0 && A[j].harga < temp.harga {
+		for j >= 0 && A[j].harga > temp.harga {
 			A[j+1] = A[j]
 			j = j - 1
 		}
