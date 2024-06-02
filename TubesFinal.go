@@ -36,7 +36,7 @@ func main() {
 		case 3:
 			hapusBarang(&A, &nBarang)
 		case 4:
-			modalBarang(A, nBarang)
+			fmt.Println("Modal barang keseluruhan", modalBarang(A, nBarang))
 		case 5:
 			defaultShow(A, nBarang)
 		case 6:
@@ -87,9 +87,8 @@ func menu() {
 func inputBarang(A *arrBarang, n *int) {
 	//menambahkan data barang
 	var nama string = "A"
-	var i int = 0
 	for *n < NMAX && nama != "none" && nama != "None" && nama != "NONE" {
-		fmt.Println("Barang", i+1)
+		fmt.Println("Barang", *n+1)
 		fmt.Print("Nama: ")
 		fmt.Scan(&nama)
 		if nama != "none" && nama != "None" && nama != "NONE" {
@@ -216,17 +215,9 @@ func selSortID(A *arrBarang, n int) {
 
 func showByPrice(A *arrBarang, n int) {
 	var i int
-	inSortPrice(*A, n)
-	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
-	for i = 0; i < n; i++ {
-		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
-	}
-	menu()
-}
-
-func inSortPrice(A arrBarang, n int) {
-	var i, j int
+	var j int
 	var temp Barang
+	//insertion sort ascending
 	for i = 1; i < n; i++ {
 		temp = A[i]
 		j = i - 1
@@ -236,6 +227,11 @@ func inSortPrice(A arrBarang, n int) {
 		}
 		A[j+1] = temp
 	}
+	fmt.Printf("%15s %15s %15s %15s %15s %15s\n", "ID Barang", "Nama Barang", "Kategori", "Modal", "Harga", "Stok")
+	for i = 0; i < n; i++ {
+		fmt.Printf("%15d %15s %15s %15d %15d %15d\n", A[i].idBarang, A[i].nama, A[i].kategori, A[i].modal, A[i].harga, A[i].stok)
+	}
+	menu()
 }
 
 func searchByID(A arrBarang, n int) {
@@ -279,32 +275,33 @@ func inputTransaksi(A *arrBarang, n int, B *arrTransaksi, k *int) {
 	var nama string = "A"
 	var nBarang, index, IDBarang, temp int
 	for nama != "none" && nama != "None" && nama != "NONE" {
-		fmt.Print("Masukkan ID Barang: ")
-		fmt.Scan(&IDBarang)
 		fmt.Print("Masukkan Nama Barang: ")
 		fmt.Scan(&nama)
-		fmt.Print("Masukkan Banyak Barang: ")
-		fmt.Scan(&nBarang)
-		index = seqSearchNamaA(*A, n, nama)
-		if index != -1 {
-			temp = A[index].stok
-			if A[index].stok != 0 {
-				A[index].stok -= nBarang
-				if A[index].stok >= 0 {
-					B[*k].idBarang = IDBarang
-					B[*k].nama = nama
-					B[*k].jumlahBarang = nBarang
-					*k++
+		if nama != "none" && nama != "NONE" && nama != "None" {
+			fmt.Print("Masukkan ID Barang: ")
+			fmt.Scan(&IDBarang)
+			fmt.Print("Masukkan Banyak Barang: ")
+			fmt.Scan(&nBarang)
+			index = seqSearchNamaA(*A, n, nama)
+			if index != -1 {
+				temp = A[index].stok
+				if A[index].stok != 0 {
+					A[index].stok -= nBarang
+					if A[index].stok >= 0 {
+						B[*k].idBarang = IDBarang
+						B[*k].nama = nama
+						B[*k].jumlahBarang = nBarang
+						*k++
+					} else {
+						A[index].stok = temp
+						fmt.Println("Stok Barang Tidak mencukupi, silahkan input ulang")
+					}
 				} else {
-					A[index].stok = temp
-					fmt.Println("Stok Barang Tidak mencukupi, silahkan input ulang")
-
+					fmt.Println("Stok Barang Habis, silahkan input ulang")
 				}
 			} else {
-				fmt.Println("Stok Barang Habis, silahkan input ulang")
+				fmt.Println("Barang tidak ditemukan")
 			}
-		} else {
-			fmt.Println("Barang tidak ditemukan")
 		}
 	}
 }
